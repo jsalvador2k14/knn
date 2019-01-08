@@ -1,0 +1,39 @@
+ext {
+	smileVersion = '1.5.2'	
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'application'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+mainClassName = "com.jaimes.knn.wbc.WBCUncompressedTest"
+
+
+//Copiar las dependencias al directorio /libs
+task copyDependencies(type: Copy) {
+	delete 'libs'
+	from configurations.compile
+	into 'libs'
+}
+
+copyDependencies.group = "Custom"
+
+
+dependencies {
+	compile "com.github.haifengl:smile-core:$smileVersion"
+	compile "com.github.haifengl:smile-plot:$smileVersion"
+	compile "com.github.haifengl:smile-netlib:$smileVersion"
+	compile "org.apache.commons:commons-lang3:3.7"
+	compile "log4j:log4j:1.2.17"
+	
+	testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+}
+
