@@ -1,3 +1,7 @@
+plugins {
+  id "me.champeau.gradle.jmh" version "0.4.8"
+}
+
 ext {
 	smileVersion = '1.5.2'	
 }
@@ -6,13 +10,14 @@ tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 
-apply plugin: 'java-library'
-apply plugin: 'application'
-
 repositories {
     jcenter()
     mavenCentral()
 }
+
+apply plugin: 'java-library'
+apply plugin: 'application'
+apply plugin: 'me.champeau.gradle.jmh'
 
 mainClassName = "com.jaimes.knn.wbc.WBCUncompressedTest"
 
@@ -26,6 +31,15 @@ task copyDependencies(type: Copy) {
 
 copyDependencies.group = "Custom"
 
+jmh {
+	include = 'com\\.jaimes\\.test\\*'
+	warmupIterations = 1
+    iterations = 1
+    fork = 2
+    duplicateClassesStrategy = 'warn'
+    benchmarkMode = ['avgt', 'ss']
+	jvmArgs = ['-Djmh.ignoreLock=true']
+}
 
 dependencies {
 	compile "com.github.haifengl:smile-core:$smileVersion"
@@ -33,6 +47,12 @@ dependencies {
 	compile "com.github.haifengl:smile-netlib:$smileVersion"
 	compile "org.apache.commons:commons-lang3:3.7"
 	compile "log4j:log4j:1.2.17"
+	
+	compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
+	compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
+
+//	compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.19'
+//	testCompile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.19'
 	
 	testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 }

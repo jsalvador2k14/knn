@@ -17,8 +17,8 @@ import smile.validation.Validation;
  * train: 24125
  * test : 6037
  * 
- *   utilizar xxMetricImpl   para búsqueda con árboles
- *   utilizar xxDistanceImpl para búsqueda lineal
+ *   utilizar xxMetricImpl   para busqueda con arboles
+ *   utilizar xxDistanceImpl para busqueda lineal
  * 
  * @author jsalvador
  *

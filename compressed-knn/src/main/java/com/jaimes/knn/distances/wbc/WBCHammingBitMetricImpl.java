@@ -2,15 +2,14 @@ package com.jaimes.knn.distances.wbc;
 
 import java.io.Serializable;
 
-import smile.math.distance.Distance;
+import smile.math.distance.Metric;
 
-public class WBCEuclideanBitDistanceImpl implements Distance<int[]>, Serializable {
-    
+public class WBCHammingBitMetricImpl implements Metric<int[]>, Serializable {
+
 	private static final long serialVersionUID = 1L;
-
-	public static final int MASK= 0b1111;
-	public static final int NUM_BITS = Integer.bitCount( MASK );
 	
+	public static final int MASK = 0b1111;
+
 	int cachedComp[] = null;	
 	int cached[] = new int[9];
 	
@@ -47,9 +46,9 @@ public class WBCEuclideanBitDistanceImpl implements Distance<int[]>, Serializabl
 	
 	@Override
 	public double d(int[] x, int[] y) {
-		
+
 		if (x.length != y.length)
-            throw new IllegalArgumentException(String.format("Arrays have different length: x[%d], y[%d]", x.length, y.length));
+			throw new IllegalArgumentException( String.format("Arrays have different length: x[%d], y[%d]", x.length, y.length) );
 
 		if( x!=cachedComp )
 		{
@@ -59,22 +58,23 @@ public class WBCEuclideanBitDistanceImpl implements Distance<int[]>, Serializabl
 		
         double dist = 0;
         
-		int dif1 = cached[0] - (y[0]     & MASK );
-		int dif2 = cached[1] - (y[0]>> 4 & MASK );
-		int dif3 = cached[2] - (y[0]>> 8 & MASK );
-		int dif4 = cached[3] - (y[0]>>12 & MASK );
-		int dif5 = cached[4] - (y[0]>>16 & MASK );
-		int dif6 = cached[5] - (y[0]>>20 & MASK );
-		int dif7 = cached[6] - (y[0]>>24 & MASK );
+		dist += cached[0]==(y[0]     & MASK )?0:1;
+		dist += cached[1]==(y[0]>> 4 & MASK )?0:1;
+		dist += cached[2]==(y[0]>> 8 & MASK )?0:1;
+		dist += cached[3]==(y[0]>>12 & MASK )?0:1;
+		dist += cached[4]==(y[0]>>16 & MASK )?0:1;
+		dist += cached[5]==(y[0]>>20 & MASK )?0:1;
+		dist += cached[6]==(y[0]>>24 & MASK )?0:1;
 		
-		int dif8 = cached[7] - (y[1]>>20 & MASK );
-		int dif9 = cached[8] - (y[1]>>24 & MASK );
+		dist += cached[7]==(y[1]>>20 & MASK )?0:1;
+		dist += cached[8]==(y[1]>>24 & MASK )?0:1;
 		
-		dist = dif1*dif1 + dif2*dif2 + dif3*dif3 + dif4*dif4 + dif5*dif5 + dif6*dif6 + dif7*dif7 + dif8*dif8 + dif9*dif9;
-		
+//		VectorUtils.log( decodeAux(x) );
+//		VectorUtils.log( decodeAux(y) );		
 //		System.out.println( dist );
+//      throw new RuntimeException( "test" );
 		
-		return Math.sqrt(dist);
+        return dist;
 	}
 
 }

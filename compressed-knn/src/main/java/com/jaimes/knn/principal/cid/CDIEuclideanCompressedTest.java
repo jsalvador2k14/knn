@@ -2,7 +2,7 @@ package com.jaimes.knn.principal.cid;
 
 import java.util.concurrent.TimeUnit;
 
-import com.jaimes.knn.distances.cid.CIDHEOMBitDistanceImpl;
+import com.jaimes.knn.distances.cid.CIDEuclideanBitDistanceImpl;
 import com.jaimes.knn.utils.ClassifCommon;
 import com.jaimes.knn.utils.CompressedWriter;
 import com.jaimes.knn.utils.DoubleUtils;
@@ -24,7 +24,7 @@ import smile.validation.Validation;
  * @author jsalvador
  *
  */
-public class CDICompressedTest extends ClassifCommon {
+public class CDIEuclideanCompressedTest extends ClassifCommon {
 
 	public static final int COUNT = 1;
 	
@@ -37,13 +37,13 @@ public class CDICompressedTest extends ClassifCommon {
 	public static final int CLASS_INDEX = 14;
 
 
-	public CDICompressedTest( ) {
+	public CDIEuclideanCompressedTest( ) {
 		super( TRAIN_DS, TEST_DS, CLASS_INDEX  );
 	}
 
 	public static void main(String[] args) throws Exception
 	{
-		CDICompressedTest test = new CDICompressedTest( );
+		CDIEuclideanCompressedTest test = new CDIEuclideanCompressedTest( );
 		
 		test.clasif( );
 	}
@@ -55,7 +55,7 @@ public class CDICompressedTest extends ClassifCommon {
 	    int[][] train = DoubleUtils.toInt( trainX );
 	    int[][] test = DoubleUtils.toInt( testX );
 	    
-	    CIDHEOMBitDistanceImpl distance = new CIDHEOMBitDistanceImpl( );
+	    CIDEuclideanBitDistanceImpl distance = new CIDEuclideanBitDistanceImpl( );
 	    
 	    int[][] compressedTrain = CompressedWriter.toB2B_CensusIncomeDs( train );
 	    int[][] compressedTest  = CompressedWriter.toB2B_CensusIncomeDs( test );

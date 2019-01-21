@@ -52,6 +52,7 @@ public class CompressedWriter {
 			int d5 = v11;
 			int d6 = v12;
 			
+			// store data in 6 vectors
 			out[i] = new int[6];
 			
 			out[i][0] = d[0];
@@ -89,7 +90,8 @@ public class CompressedWriter {
 
 			int d[] = utils.encode( NUM_BITS_WBC, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
 			
-			out[i] = new int[6];
+			// store data in 2 vectors
+			out[i] = new int[2];
 			
 			out[i][0] = d[0];
 			out[i][1] = d[1];

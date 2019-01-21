@@ -2,7 +2,7 @@ package com.jaimes.knn.principal.cid;
 
 import java.util.concurrent.TimeUnit;
 
-import com.jaimes.knn.distances.cid.CIDHEOMBitDistanceImpl;
+import com.jaimes.knn.distances.cid.CIDHEOMBitMetricImpl;
 import com.jaimes.knn.utils.ClassifCommon;
 import com.jaimes.knn.utils.CompressedWriter;
 import com.jaimes.knn.utils.DoubleUtils;
@@ -24,11 +24,11 @@ import smile.validation.Validation;
  * @author jsalvador
  *
  */
-public class CDICompressedTest extends ClassifCommon {
+public class CDICoverTreeCompressedTest extends ClassifCommon {
 
 	public static final int COUNT = 1;
 	
-	public static final int K = 5;
+	public static final int K = 20;
     public static int kfold = 10;
 
 	//public static final String TRAIN_DS = "E:/Data - datasets publicos/adult.csv";
@@ -37,13 +37,13 @@ public class CDICompressedTest extends ClassifCommon {
 	public static final int CLASS_INDEX = 14;
 
 
-	public CDICompressedTest( ) {
+	public CDICoverTreeCompressedTest( ) {
 		super( TRAIN_DS, TEST_DS, CLASS_INDEX  );
 	}
 
 	public static void main(String[] args) throws Exception
 	{
-		CDICompressedTest test = new CDICompressedTest( );
+		CDICoverTreeCompressedTest test = new CDICoverTreeCompressedTest( );
 		
 		test.clasif( );
 	}
@@ -55,7 +55,7 @@ public class CDICompressedTest extends ClassifCommon {
 	    int[][] train = DoubleUtils.toInt( trainX );
 	    int[][] test = DoubleUtils.toInt( testX );
 	    
-	    CIDHEOMBitDistanceImpl distance = new CIDHEOMBitDistanceImpl( );
+	    CIDHEOMBitMetricImpl distance = new CIDHEOMBitMetricImpl( );
 	    
 	    int[][] compressedTrain = CompressedWriter.toB2B_CensusIncomeDs( train );
 	    int[][] compressedTest  = CompressedWriter.toB2B_CensusIncomeDs( test );

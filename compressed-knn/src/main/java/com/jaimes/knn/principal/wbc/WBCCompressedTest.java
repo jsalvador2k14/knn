@@ -2,6 +2,11 @@ package com.jaimes.knn.principal.wbc;
 
 import java.util.concurrent.TimeUnit;
 
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+
 import com.jaimes.knn.distances.wbc.WBCHammingBitDistanceImpl;
 import com.jaimes.knn.utils.ClassifCommon;
 import com.jaimes.knn.utils.CompressedWriter;
@@ -18,17 +23,20 @@ import smile.validation.Validation;
  * train: 24125
  * test : 6037
  * 
- *   utilizar xxMetricImpl   para búsqueda con árboles
- *   utilizar xxDistanceImpl para búsqueda lineal
+ *   utilizar xxMetricImpl   para busqueda con arboles
+ *   utilizar xxDistanceImpl para busqueda lineal
  * 
  * @author jsalvador
  *
  */
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)       
+@Fork(value=2, jvmArgs={"-Xms1G", "-Xmx1G"})       
 public class WBCCompressedTest extends ClassifCommon {
 
 	public static final int COUNT = 1;
 	
-	public static final int K = 20;
+	public static final int K = 5;
     public static int kfold = 10;
 
 	public static final String TRAIN_DS = "E:/Data - datasets publicos/wbc/wbc_train.in";

@@ -2,14 +2,17 @@ package com.jaimes.knn.distances.common;
 
 import java.io.Serializable;
 
-import smile.math.distance.Distance;
+import smile.math.distance.Metric;
 
-public class HammingIntDistanceImpl implements Distance<int[]>, Serializable {
+public class HammingIntMetricImpl implements Metric<int[]>, Serializable {
     
 	private static final long serialVersionUID = 1L;
-
+	
 	@Override
 	public double d(int[] x, int[] y) {
+		
+//		return HammingDistance.d(x, y);
+		
 		if (x.length != y.length)
             throw new IllegalArgumentException(String.format("Arrays have different length: x[%d], y[%d]", x.length, y.length));
 

@@ -1,8 +1,14 @@
-package com.jaimes.knn.principal.cid;
+package com.jaimes.knn.principal.wbc;
 
 import java.util.concurrent.TimeUnit;
 
-import com.jaimes.knn.distances.cid.CIDHEOMBitDistanceImpl;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+
+import com.jaimes.knn.distances.wbc.WBCEuclideanBitDistanceImpl;
+import com.jaimes.knn.distances.wbc.WBCHammingBitDistanceImpl;
 import com.jaimes.knn.utils.ClassifCommon;
 import com.jaimes.knn.utils.CompressedWriter;
 import com.jaimes.knn.utils.DoubleUtils;
@@ -23,44 +29,42 @@ import smile.validation.Validation;
  * 
  * @author jsalvador
  *
- */
-public class CDICompressedTest extends ClassifCommon {
+ */      
+public class WBCEuclideanCompressedTest extends ClassifCommon {
 
 	public static final int COUNT = 1;
 	
 	public static final int K = 5;
     public static int kfold = 10;
 
-	//public static final String TRAIN_DS = "E:/Data - datasets publicos/adult.csv";
-	public static final String TRAIN_DS = "E:/Data - datasets publicos/adult_train.csv";
-	public static final String TEST_DS  = "E:/Data - datasets publicos/adult_test.csv";
-	public static final int CLASS_INDEX = 14;
-
-
-	public CDICompressedTest( ) {
+	public static final String TRAIN_DS = "E:/Data - datasets publicos/wbc/wbc_train.in";
+	public static final String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";	
+	public static final int CLASS_INDEX = 9;
+	
+	public WBCEuclideanCompressedTest( ) {
 		super( TRAIN_DS, TEST_DS, CLASS_INDEX  );
 	}
 
 	public static void main(String[] args) throws Exception
 	{
-		CDICompressedTest test = new CDICompressedTest( );
+		WBCEuclideanCompressedTest test = new WBCEuclideanCompressedTest( );
 		
 		test.clasif( );
 	}
 	
 	public void clasif( ) throws Exception {
 		
-		init( KNN.class, " bit HEOM" );
+		init( KNN.class, " bit Euclidean" );
 		
 	    int[][] train = DoubleUtils.toInt( trainX );
 	    int[][] test = DoubleUtils.toInt( testX );
 	    
-	    CIDHEOMBitDistanceImpl distance = new CIDHEOMBitDistanceImpl( );
+	    WBCEuclideanBitDistanceImpl distance = new WBCEuclideanBitDistanceImpl( );
 	    
-	    int[][] compressedTrain = CompressedWriter.toB2B_CensusIncomeDs( train );
-	    int[][] compressedTest  = CompressedWriter.toB2B_CensusIncomeDs( test );
+	    int[][] compressedTrain = CompressedWriter.toB2B_WBC( train );
+	    int[][] compressedTest = CompressedWriter.toB2B_WBC( test );
 	    
-	    CompressedWriter.printCensus( compressedTest, 10 );
+//	    CompressedWriter.printWbc( compressedTrain, 10 );
 	    
 	    KNN<int[]> knn = new KNN<>( compressedTrain, trainY, distance, K );
 	    
