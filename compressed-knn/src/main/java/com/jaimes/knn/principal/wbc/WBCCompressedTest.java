@@ -2,11 +2,6 @@ package com.jaimes.knn.principal.wbc;
 
 import java.util.concurrent.TimeUnit;
 
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-
 import com.jaimes.knn.distances.wbc.WBCHammingBitDistanceImpl;
 import com.jaimes.knn.utils.ClassifCommon;
 import com.jaimes.knn.utils.CompressedWriter;
@@ -28,10 +23,7 @@ import smile.validation.Validation;
  * 
  * @author jsalvador
  *
- */
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)       
-@Fork(value=2, jvmArgs={"-Xms1G", "-Xmx1G"})       
+ */     
 public class WBCCompressedTest extends ClassifCommon {
 
 	public static final int COUNT = 1;
@@ -40,11 +32,13 @@ public class WBCCompressedTest extends ClassifCommon {
     public static int kfold = 10;
 
 	public static final String TRAIN_DS = "E:/Data - datasets publicos/wbc/wbc_train.in";
-	public static final String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";	
+	public static final String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";
+	public static final String TOTAL_DS = "E:/Data - datasets publicos/wbc/wbc.in";
+	
 	public static final int CLASS_INDEX = 9;
 	
 	public WBCCompressedTest( ) {
-		super( TRAIN_DS, TEST_DS, CLASS_INDEX  );
+		super( TOTAL_DS, TRAIN_DS, TEST_DS, CLASS_INDEX  );
 	}
 
 	public static void main(String[] args) throws Exception
@@ -59,14 +53,16 @@ public class WBCCompressedTest extends ClassifCommon {
 		init( KNN.class, " bit Hamming" );
 		
 	    int[][] train = DoubleUtils.toInt( trainX );
-	    int[][] test = DoubleUtils.toInt( testX );
+	    int[][] test  = DoubleUtils.toInt( testX );
+	    int[][] total = DoubleUtils.toInt( totalX );
 	    
 	    WBCHammingBitDistanceImpl distance = new WBCHammingBitDistanceImpl( );
 	    
 	    int[][] compressedTrain = CompressedWriter.toB2B_WBC( train );
-	    int[][] compressedTest = CompressedWriter.toB2B_WBC( test );
+	    int[][] compressedTest  = CompressedWriter.toB2B_WBC( test );
+	    int[][] compressedTotal = CompressedWriter.toB2B_WBC( total );
 	    
-//	    CompressedWriter.printWbc( compressedTrain, 10 );
+//	    CompressedWriter.printWbc( compressedTotal, 10 );
 	    
 	    KNN<int[]> knn = new KNN<>( compressedTrain, trainY, distance, K );
 	    
@@ -94,19 +90,12 @@ public class WBCCompressedTest extends ClassifCommon {
 	    watch.reset();
 	    watch.start();
 	    {
-	    	double estimations = 0;
-	    	long miliseconds = 0;
-	    	
-	    	for( int i=0; i<COUNT; i++ ) {
-	    	    estimations += Validation.cv( kfold, trainer, compressedTrain, trainY );    
-	    		
-//	    		System.out.println( watch.getTime(TimeUnit.MILLISECONDS) );
-	    	}
+	    	double estimations = Validation.cv( kfold, trainer, compressedTrain, trainY );    
+
     		watch.stop();
-	    	miliseconds = watch.getTime(TimeUnit.MILLISECONDS)/ COUNT;
+    		
+    		long miliseconds = watch.getTime(TimeUnit.MILLISECONDS);
 	    	
-	    	estimations = estimations / COUNT;
-			
 	        System.out.format( "time elapsed = %.2f seconds (%d miliseconds)\n",  (float )miliseconds/1000, miliseconds );
 	        
 		    System.out.println( );

@@ -23,12 +23,17 @@ public class ClassifCommon {
 	//public static final String TEST_DS  = "E:/Data - datasets publicos/arritmia/arritmia.in";
 	//public static final int CLASS_INDEX = 160;
 
-	public String TRAIN_DS = "E:/Data - datasets publicos/wbc/wbc_train.in";
-	public String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";	
+	public String TRAIN_DS  = "E:/Data - datasets publicos/wbc/wbc_train.in";
+	public String TEST_DS   = "E:/Data - datasets publicos/wbc/wbc_test.in";	
+	public String TOTAL_DS  = "";	
+
 	public int CLASS_INDEX = 9;
 
 	protected StopWatch watch = new StopWatch( );
 	
+	protected double[][] totalX;
+	protected int[] totalY;
+
 	protected double[][] trainX;
 	protected int[] trainY;
 	
@@ -39,9 +44,10 @@ public class ClassifCommon {
 	
 	private String classifName = "";
 	
-	public ClassifCommon( String trainDs, String testDs, int classIndex ) {
+	public ClassifCommon( String totalDs, String trainDs, String testDs, int classIndex ) {
+		TOTAL_DS = totalDs;
 		TRAIN_DS = trainDs;
-		TEST_DS = testDs;
+		TEST_DS  = testDs;
 		CLASS_INDEX = classIndex;
 	}
 
@@ -61,14 +67,12 @@ public class ClassifCommon {
 		
 		System.out.println( "Train dataset: " + TRAIN_DS );
 		System.out.println( "Test  dataset: " + TEST_DS );
+		System.out.println( "Total dataset: " + TOTAL_DS );
 		
 		InputStream streamTrain = new FileInputStream( TRAIN_DS );
-		InputStream streamTtest = new FileInputStream( TEST_DS );
+		InputStream streamTest = new FileInputStream( TEST_DS );
+		InputStream streamTotal = new FileInputStream( TOTAL_DS );
 		
-		//InputStream streamTrain = new FileInputStream( DIRECTORY + "arritmia.in" );
-		//InputStream streamTtest = new FileInputStream( DIRECTORY + "arritmia.in" );
-
-
 		DelimitedTextParser parser = new DelimitedTextParser( );
 		parser.setResponseIndex( new NominalAttribute("class"), CLASS_INDEX );
 		
@@ -76,8 +80,9 @@ public class ClassifCommon {
 		parser.setColumnNames( true );
 		parser.setMissingValuePlaceholder( "NA" );
 			
-		AttributeDataset train = parser.parse( "ADULT Train", streamTrain );
-		AttributeDataset test  = parser.parse( "ADULT Test", streamTtest );
+		AttributeDataset train = parser.parse( "Train", streamTrain );
+		AttributeDataset test  = parser.parse( "Test" , streamTest );
+		AttributeDataset total = parser.parse( "Total", streamTotal );
 		
 		responseAttr = (NominalAttribute )train.responseAttribute( );
 		
@@ -90,14 +95,21 @@ public class ClassifCommon {
 		System.out.println( );
 
 
-//		System.out.println( train );
-//		System.out.println( test );
-		
 		trainX = train.toArray( new double[train.size()][]);
 		trainY = train.toArray( new int[train.size()]);
 		
 		testX = test.toArray(new double[test.size()][]);
 		testY = test.toArray(new int[test.size()]);
+
+		totalX = total.toArray( new double[total.size()][]);
+		totalY = total.toArray( new int[total.size()]);
+		
+		System.out.println( "Train size: " + trainX.length );
+		System.out.println( "Test size : " + testX.length );
+		System.out.println( "Total size: " + totalX.length );
+		
+		System.out.println( "*****************************************************");
+		System.out.println( );
 	}
 	
 	protected void summary( int x[], int y[], StopWatch watch, int count ) {

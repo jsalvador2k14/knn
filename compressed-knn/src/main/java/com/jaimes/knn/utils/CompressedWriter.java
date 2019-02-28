@@ -68,8 +68,6 @@ public class CompressedWriter {
 	
 	public static int[][] toB2B_WBC( int[][] data ) {
 		
-		System.out.println( data[0].length );
-		
 		int[][] out = new int[data.length][];
 		
 		CompressedEncoder utils = new CompressedEncoder( );
@@ -106,7 +104,7 @@ public class CompressedWriter {
 		
 		for( int i=0;i<size; i++ )
 		{
-			int[] x = enc.decoder( NUM_BITS_CENSUS, data[i][0], data[i][1], data[i][2] );
+			int[] x = enc.decode( NUM_BITS_CENSUS, data[i][0], data[i][1], data[i][2] );
 	        
 	        int x13 = data[i][3];
 	        int x14 = data[i][4];
@@ -123,7 +121,7 @@ public class CompressedWriter {
 		
 		for( int i=0;i<size; i++ )
 		{
-			int[] x = enc.decoder( NUM_BITS_WBC, data[i][0], data[i][1] );
+			int[] x = enc.decode( NUM_BITS_WBC, data[i][0], data[i][1] );
 	        
 	        System.out.format( "%3d: %d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d \n", 
 	        		(i+1), x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8] );

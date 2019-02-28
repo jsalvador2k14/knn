@@ -25,7 +25,7 @@ import smile.validation.Validation;
  */
 public class WBCUncompressedTest extends ClassifCommon {
 
-	public static final int COUNT = 1;
+	public static final int COUNT = 10;
 	
 	public static final int K = 5;
 	
@@ -33,11 +33,13 @@ public class WBCUncompressedTest extends ClassifCommon {
     
 	
 	public static final String TRAIN_DS = "E:/Data - datasets publicos/wbc/wbc_train.in";
-	public static final String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";	
+	public static final String TEST_DS  = "E:/Data - datasets publicos/wbc/wbc_test.in";
+	public static final String TOTAL_DS = "E:/Data - datasets publicos/wbc/wbc.in";
+	
 	public static final int CLASS_INDEX = 9;
 	
 	public WBCUncompressedTest( ) {
-		super( TRAIN_DS, TEST_DS, CLASS_INDEX  );
+		super( TOTAL_DS, TRAIN_DS, TEST_DS, CLASS_INDEX  );
 	}
 	
 	public static void main(String[] args) throws Exception
@@ -49,10 +51,11 @@ public class WBCUncompressedTest extends ClassifCommon {
 	
 	public void clasif( ) throws Exception {
 		
-		init( KNN.class, " EuclideanInt" );
+		init( KNN.class, " HammingInt" );
 		
 	    int[][] train = DoubleUtils.toInt( trainX );
 	    int[][] test  = DoubleUtils.toInt( testX );
+	    int[][] total = DoubleUtils.toInt( totalX );
 	    
 	    HammingIntDistanceImpl distance = new HammingIntDistanceImpl( );
 	    
@@ -70,7 +73,7 @@ public class WBCUncompressedTest extends ClassifCommon {
 	        
 		    watch.stop();
 		    
-		    summary( testY, pred, watch );
+		    summary( testY, pred, watch, COUNT );
 	    }
 		
 	    System.out.println( );
@@ -82,27 +85,16 @@ public class WBCUncompressedTest extends ClassifCommon {
 	    watch.reset();
 	    watch.start();
 	    {
-	    	double estimations = 0;
-	    	long miliseconds = 0;
-	    	
-	    	for( int i=0; i<COUNT; i++ ) {
-	    		watch.reset();
-	    	    watch.start();
-	    	    
-		    	estimations += Validation.cv( kfold, trainer, train, trainY );
+	    	double estimations = Validation.cv( kfold, trainer, train, trainY );
 		    
-		    	watch.stop();
+	    	watch.stop();
 		    	
-		    	miliseconds += watch.getTime(TimeUnit.MILLISECONDS);
-	    	}
-	    	estimations = estimations / COUNT;
-	    	miliseconds = miliseconds / COUNT;
-	    	
+	    	long miliseconds = watch.getTime(TimeUnit.MILLISECONDS);
+
 	        System.out.format( "time elapsed = %.2f seconds (%d miliseconds)\n",  (float )miliseconds/1000, miliseconds );
 	        
 		    System.out.println( );
 		    System.out.format( "Cross validation (%d folds): %.3f", kfold, estimations*100 );
 	    }
 	}
-
 }

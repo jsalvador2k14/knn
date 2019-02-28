@@ -46,7 +46,7 @@ public class CompressedEncoder {
 		return ret;
 	}
 	
-	public int[] decoder( int numBits, int...values ) 
+	public int[] decode( int numBits, int...values ) 
 	{
 		int elementsInBlock = 31 / numBits;
 		
